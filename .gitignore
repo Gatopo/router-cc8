@@ -1,0 +1,4 @@
+# ignore generated .class files.
+*.class
+/.idea/workspace.xml
+/.idea/uiDesigner.xml
