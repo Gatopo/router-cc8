@@ -1,4 +1,7 @@
 
+import Routing.RoutingClient;
+import Routing.RoutingServer;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -8,7 +11,7 @@ import java.util.Scanner;
  * Created by Mario on 01/11/2014.
  */
 public class Router {
-
+    private static String MY_IP;
     public static void main (String []args) throws Exception{
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
@@ -16,6 +19,7 @@ public class Router {
         System.out.println("Enter Path to the file: ");
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
+        sendAdyacents(adyacentNodes);
         DistanceVector distanceVector = new DistanceVector(myIp);
         distanceVector.fillRoutingTable(adyacentNodes);
         System.out.println(distanceVector.getRoutingTable().toString());
@@ -41,6 +45,17 @@ public class Router {
         return nodes;
     }
 
+    private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
+        for (int i = 0; i <= nodes.size(); i++){
+            if (nodes.get(i).contains(";")) {
+                String[] firstNode = nodes.get(i).split(";");
+                String ip = firstNode[0];
+                RoutingClient rc = new RoutingClient(MY_IP, ip);
+                RoutingServer rs = new RoutingServer(ip);
+                rc.start();
+            }
+        }
+    }
 
 
 }
