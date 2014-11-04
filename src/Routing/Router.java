@@ -39,9 +39,9 @@ public class Router {
                 String[] firstNode = nodes.get(i).split(";");
                 String ip = firstNode[0];
                 RoutingClient rc = new RoutingClient(MY_IP, ip);
+                RoutingServer rs = new RoutingServer(ip);
                 rc.start();
             }
         }
     }
-
 }
