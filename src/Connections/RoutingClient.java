@@ -1,6 +1,7 @@
-package Routing;
+package Connections;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.InetAddress;
@@ -23,8 +24,8 @@ public class RoutingClient extends  Thread{
 
     public RoutingClient(String localIp, String adyacentNode) throws  Exception{
        adyacentIp = adyacentNode;
-       InetAddress ip = InetAddress.getByName(adyacentNode);
-       socket = new Socket(ip, ROUTING_CLIENT_PORT);
+       socket = new Socket(adyacentIp, ROUTING_CLIENT_PORT);
+       OUT = new PrintWriter(socket.getOutputStream());
        LOCAL_IP = localIp;
     }
 
@@ -34,6 +35,8 @@ public class RoutingClient extends  Thread{
             String helloMsg = FROM_CONSTANT + LOCAL_IP + "\n" + HELLO_CONSTANT;
             String welcomeMsg = FROM_CONSTANT + adyacentIp + "\n" + WELCOME_CONSTANT;
             OUT.println(helloMsg);
+            System.out.println("MESSAGE SENT: " + helloMsg);
+            OUT.flush();
             String welcome = IN.readLine();
             if (welcome.equals(welcomeMsg)){
                 System.out.println("SALUDO FINALICADO CON: " + adyacentIp);
