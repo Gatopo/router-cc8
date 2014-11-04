@@ -19,10 +19,15 @@ public class Router {
         System.out.println("Enter Path to the file: ");
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);
+        //sendAdyacents(adyacentNodes);
         DistanceVector distanceVector = new DistanceVector(myIp);
         distanceVector.fillRoutingTable(adyacentNodes);
         System.out.println(distanceVector.getRoutingTable().toString());
+        ArrayList<String> newRow = new ArrayList<String>();
+        newRow.add("555:4");
+        newRow.add("222:9");
+        distanceVector.checkResendForNewElement("456",newRow);
+        System.out.println(distanceVector.tablePrint());
         /*
         ArrayList<String[]> tempArray = (ArrayList<String[]>)distanceVector.getRoutingTable().get("1234");
         String[] tempStringArray = tempArray.get(0);

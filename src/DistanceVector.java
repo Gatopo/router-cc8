@@ -52,7 +52,7 @@ public class DistanceVector extends Thread{
                 node.add(element);
             }
         }
-        routingTable.put(IPSource, node);
+        routingTable.put(newIP, node);
         keys.add(newIP);
     }
 
@@ -66,7 +66,7 @@ public class DistanceVector extends Thread{
                 addANewRoute(IPComing, comingConnections);
             }
         }
-        return routingTable.containsValue(localTable);
+        return !routingTable.containsValue(localTable);
     }
 
 
@@ -102,7 +102,7 @@ public class DistanceVector extends Thread{
 
     public String getAddress(String pairData){
         String separatedData[];
-        separatedData = pairData.split(";");
+        separatedData = pairData.split(":");
         if(separatedData != null){
             String returnData = "";
             returnData = separatedData[0].trim();
@@ -114,7 +114,7 @@ public class DistanceVector extends Thread{
 
     public String getDistance(String pairData){
         String separatedData[];
-        separatedData = pairData.split(";");
+        separatedData = pairData.split(":");
         if(separatedData != null){
             String returnData = "";
             returnData = separatedData[1].trim();
@@ -126,5 +126,21 @@ public class DistanceVector extends Thread{
 
     public HashMap<String,Object> getRoutingTable(){
         return routingTable;
+    }
+
+    public String tablePrint(){
+        ArrayList<String[]> row;
+        String[] nodeToNodeInformation;
+        String print = "";
+        for(int i=0; i<keys.size(); i++){
+            print = print + "Node: " + keys.get(i) + "\n";
+            row = (ArrayList<String[]>)routingTable.get(keys.get(i));
+            for(int j=0; j<row.size(); j++){
+                nodeToNodeInformation = row.get(j);
+                print = print + "from " + nodeToNodeInformation[0] +" to " + nodeToNodeInformation[1] +
+                        " the cost is: " + nodeToNodeInformation[2] + "\n";
+            }
+        }
+        return print;
     }
 }
