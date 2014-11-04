@@ -1,6 +1,6 @@
 
-import Routing.RoutingClient;
-import Routing.RoutingServer;
+import Connections.RoutingClient;
+import Connections.RoutingServer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -58,6 +58,9 @@ public class Router {
                 RoutingClient rc = new RoutingClient(MY_IP, ip);
                 RoutingServer rs = new RoutingServer(ip);
                 rc.start();
+                System.out.println("Client Thread Started, ID: " + i);
+                rs.start();
+                System.out.println("Server Thread Started, ID: " + i);
             }
         }
     }

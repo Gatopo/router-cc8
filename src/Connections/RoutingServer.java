@@ -1,4 +1,4 @@
-package Routing;
+package Connections;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,6 +40,8 @@ public class RoutingServer extends Thread {
                             //No se si al instanciar el br aqui de clavos esto
                             //por que no se si el br puede hacer eso
                             OUT_WRITER.write(WELCOME_CONSTANT);
+                            System.out.println("MESSAGE SENT: " + WELCOME_CONSTANT);
+                            OUT_WRITER.flush();
                         }
                         if (secondPart.equals(DV_CONSTANT)){
                             System.out.print("MEANWHILE, PRINTING SOMETHING");
@@ -54,6 +56,7 @@ public class RoutingServer extends Thread {
         try {
             Socket socket = serverSocket.accept();
             IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            OUT_WRITER = new PrintWriter(socket.getOutputStream());
             String firstPart = IN.readLine();
             compareMsg(firstPart, IN);
         }catch (IOException ioe){
