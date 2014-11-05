@@ -31,6 +31,9 @@ public class DistanceVector extends Thread{
                 }else{
                     element[2] = "99";
                 }
+                System.out.println(element[0]);
+                System.out.println(element[1]);
+                System.out.println(element[2]);
                 node.add(element);
             }
         }

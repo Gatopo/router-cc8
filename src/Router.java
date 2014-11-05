@@ -28,13 +28,13 @@ public class Router {
         newRow.add("222:9");
         distanceVector.checkResendForNewElement("456",newRow);
         System.out.println(distanceVector.tablePrint());
-        /*
-        ArrayList<String[]> tempArray = (ArrayList<String[]>)distanceVector.getRoutingTable().get("1234");
+
+        ArrayList<String[]> tempArray = (ArrayList<String[]>)distanceVector.getRoutingTable().get("192.168.43.179");
         String[] tempStringArray = tempArray.get(0);
         System.out.println(tempStringArray[0]);
         System.out.println(tempStringArray[1]);
         System.out.println(tempStringArray[2]);
-        */
+
     }
 
     private static ArrayList readFile (String path) throws Exception{
@@ -52,8 +52,8 @@ public class Router {
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
         for (int i = 0; i <= nodes.size(); i++){
-            if (nodes.get(i).contains(";")) {
-                String[] firstNode = nodes.get(i).split(";");
+            if (nodes.get(i).contains(":")) {
+                String[] firstNode = nodes.get(i).split(":");
                 String ip = firstNode[0];
                 RoutingClient rc = new RoutingClient(MY_IP, ip);
                 RoutingServer rs = new RoutingServer(ip);
