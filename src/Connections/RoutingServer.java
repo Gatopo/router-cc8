@@ -20,10 +20,11 @@ public class RoutingServer extends Thread {
     private static BufferedReader IN;
     private static PrintWriter OUT_WRITER;
     private static String ADYACENT_IP;
+    private static Socket SOCKET;
 
-    public RoutingServer(String ip) throws Exception{
+    public RoutingServer() throws Exception{
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
-        ADYACENT_IP = ip;
+        ADYACENT_IP = "";
     }
 
     public void compareMsg(String msg, BufferedReader br) throws  Exception{
@@ -33,16 +34,20 @@ public class RoutingServer extends Thread {
             adyacentIp = firstPick[1];
             if ((!adyacentIp.isEmpty()) && (adyacentIp.equals(ADYACENT_IP))){
                 String helloMsg = FROM_CONSTANT + adyacentIp;
-                if (msg.equals(helloMsg)){
+                if (msg.equals(helloMsg)){                  //Creo que comparo si es la misma IP adyacente ...
                     String secondPart = br.readLine();
                     if (secondPart.contains(":")){
+                        //Comparo si es Tipo HELLO
                         if (secondPart.equals(HELLO_CONSTANT)){
                             //No se si al instanciar el br aqui de clavos esto
                             //por que no se si el br puede hacer eso
-                            OUT_WRITER.write(WELCOME_CONSTANT);
-                            System.out.println("MESSAGE SENT: " + WELCOME_CONSTANT);
+                            String from = FROM_CONSTANT + ADYACENT_IP + "\n";
+                            String weclomeMsg = WELCOME_CONSTANT + "\n";
+                            OUT_WRITER.write(from + weclomeMsg);
+                            System.out.println("<SERVER>MESSAGE SENT: " + from + weclomeMsg);
                             OUT_WRITER.flush();
                         }
+                        //Comparo si es Tipo DV
                         if (secondPart.equals(DV_CONSTANT)){
                             System.out.print("MEANWHILE, PRINTING SOMETHING");
                         }
@@ -52,13 +57,20 @@ public class RoutingServer extends Thread {
         }
     }
 
+    public void setIncomingIP(String ip){
+        ADYACENT_IP = ip;
+    }
+
     public void run(){
         try {
-            Socket socket = serverSocket.accept();
-            IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            OUT_WRITER = new PrintWriter(socket.getOutputStream());
-            String firstPart = IN.readLine();
-            compareMsg(firstPart, IN);
+            while(true) {
+                SOCKET = serverSocket.accept();
+                IN = new BufferedReader(new InputStreamReader(SOCKET.getInputStream()));
+                OUT_WRITER = new PrintWriter(SOCKET.getOutputStream());
+                OUT_WRITER.flush();
+                String firstPart = IN.readLine();
+                compareMsg(firstPart, IN);
+            }
         }catch (IOException ioe){
             System.out.println("<ERROR> Cuased by:" + ioe);
         } catch (Exception e) {

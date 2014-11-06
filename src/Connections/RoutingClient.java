@@ -1,9 +1,7 @@
 package Connections;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -20,29 +18,48 @@ public class RoutingClient extends  Thread{
     private static String LOCAL_IP = "";
     private PrintWriter OUT = null;
     private String adyacentIp;
-    BufferedReader IN = null;
+    BufferedReader IN;
 
     public RoutingClient(String localIp, String adyacentNode) throws  Exception{
        adyacentIp = adyacentNode;
-       socket = new Socket(adyacentIp, ROUTING_CLIENT_PORT);
+       InetAddress address = InetAddress.getByName(adyacentIp);
+       socket = new Socket(address, ROUTING_CLIENT_PORT);
        OUT = new PrintWriter(socket.getOutputStream());
+       IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
        LOCAL_IP = localIp;
     }
+
+    public void verifyType(String inMsg, BufferedReader in) throws Exception{
+        String welcomeMsg = WELCOME_CONSTANT + "\n";
+        String[] splitter = inMsg.split(":");
+        if ((splitter[0] + ":").equals(FROM_CONSTANT )){
+            if (!splitter[1].isEmpty()){
+                String ipReceived  = splitter[1];
+                if (adyacentIp.equals(ipReceived)){
+                    System.out.println("<CLIENT> DEBUGGING IP RECIVED:" + ipReceived);
+                    String type = in.readLine();
+                    //Revisar si es WELCOME
+                    System.out.println("<CLIENT> TYPE IS:" + type);
+                    if (type.equals(WELCOME_CONSTANT)){
+                        System.out.println("<CLIENT> Starting to send DV");
+                    }
+                }
+            }
+        }
+    }
+
 
     @Override
     public void run(){
         try {
             String helloMsg = FROM_CONSTANT + LOCAL_IP + "\n" + HELLO_CONSTANT;
-            String welcomeMsg = FROM_CONSTANT + adyacentIp + "\n" + WELCOME_CONSTANT;
             OUT.println(helloMsg);
-            System.out.println("MESSAGE SENT: " + helloMsg);
+            System.out.println("<CLIENT>MESSAGE SENT: " + helloMsg);
             OUT.flush();
             String welcome = IN.readLine();
-            if (welcome.equals(welcomeMsg)){
-                System.out.println("SALUDO FINALICADO CON: " + adyacentIp);
-                System.out.println("ENVIAR ADYACENTES");
-            }
-        } catch (IOException e) {
+            System.out.println("<CLIENT>RECIEVING FROM SERVER: " + welcome);
+            verifyType(welcome, IN);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
