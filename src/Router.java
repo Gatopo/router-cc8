@@ -1,6 +1,7 @@
 
-import Connections.RoutingClient;
-import Connections.RoutingServer;
+import connections.RoutingClient;
+import connections.RoutingServer;
+import routingtable.DistanceVector;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 /**
  * Created by Mario on 01/11/2014.
  */
+
 public class Router {
     private static String MY_IP;
     public static void main (String []args) throws Exception{
@@ -21,9 +23,8 @@ public class Router {
         System.out.println("Enter Path to the file: ");
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);
-        DistanceVector distanceVector = new DistanceVector(myIp);
-        distanceVector.fillRoutingTable(adyacentNodes);
+        //sendAdyacents(adyacentNodes);
+        DistanceVector distanceVector = new DistanceVector(myIp, adyacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
         System.out.println(distanceVector.tablePrint());
     }

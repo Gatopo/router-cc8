@@ -1,6 +1,5 @@
-package Connections;
+package connections;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
