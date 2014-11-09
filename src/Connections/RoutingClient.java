@@ -1,8 +1,9 @@
-package Connections;
+package connections;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 /**
@@ -26,14 +27,17 @@ public class RoutingClient extends  Thread{
         adyacentIp = adyacentNode;
         try {
             InetAddress address = InetAddress.getByName(adyacentIp);
-            socket = new Socket(address, ROUTING_CLIENT_PORT);
+            //socket = new Socket(address, ROUTING_CLIENT_PORT);
+            socket = new Socket();
+            socket.connect(new InetSocketAddress(address, ROUTING_CLIENT_PORT), 10000);
             OUT = new PrintWriter(socket.getOutputStream());
             IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             LOCAL_IP = localIp;
             successfulConnection = true;
             threadName = name;
         }catch(IOException ioe){
-            System.err.println("Error while try to create the new connection: " + ioe);
+            System.err.println("Error while try to create the new connection with the host: " + adyacentIp
+                    +"\ngive the following error: " + ioe);
             successfulConnection = false;
         }catch(SecurityException se){
             System.err.println("A security method don´t allow the connection: " + se);

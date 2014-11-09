@@ -1,6 +1,6 @@
 
-import Connections.RoutingClient;
-import Connections.RoutingServer;
+import connections.RoutingClient;
+import connections.RoutingServer;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
