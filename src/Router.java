@@ -42,7 +42,7 @@ public class Router {
     }
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
-        RoutingServer rs = new RoutingServer();
+        RoutingServer rs = new RoutingServer(MY_IP);
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
             if (nodes.get(i).contains(":")) {
