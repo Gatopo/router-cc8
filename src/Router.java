@@ -49,7 +49,7 @@ public class Router {
                 String[] firstNode = nodes.get(i).split(":");
                 String ip = firstNode[0];
                 rs.setIncomingIP(ip);
-                System.out.println("Server Thread Started, ID: " + i);
+                System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
                 RoutingClient rc = new RoutingClient(MY_IP, ip, name.toString());
                 System.out.println("Starting a new Client");
