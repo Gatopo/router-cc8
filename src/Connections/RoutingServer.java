@@ -24,7 +24,10 @@ public class RoutingServer extends Thread {
 
     public RoutingServer() throws Exception{
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
-        ADYACENT_IP = "";
+    }
+
+    public void setIncomingIP(String ip){
+        ADYACENT_IP = ip;
     }
 
     public void compareMsg(String msg, BufferedReader br) throws  Exception{
@@ -34,6 +37,7 @@ public class RoutingServer extends Thread {
             adyacentIp = firstPick[1];
             if ((!adyacentIp.isEmpty()) && (adyacentIp.equals(ADYACENT_IP))){
                 String helloMsg = FROM_CONSTANT + adyacentIp;
+                System.out.println("<SERVER> MESSAGE RECEIVED: " + helloMsg);
                 if (msg.equals(helloMsg)){                  //Creo que comparo si es la misma IP adyacente ...
                     String secondPart = br.readLine();
                     if (secondPart.contains(":")){
@@ -57,14 +61,11 @@ public class RoutingServer extends Thread {
         }
     }
 
-    public void setIncomingIP(String ip){
-        ADYACENT_IP = ip;
-    }
-
     public void run(){
         try {
             while(true) {
                 SOCKET = serverSocket.accept();
+                System.out.println("<SERVER> INITIATING THREAD");
                 IN = new BufferedReader(new InputStreamReader(SOCKET.getInputStream()));
                 OUT_WRITER = new PrintWriter(SOCKET.getOutputStream());
                 OUT_WRITER.flush();

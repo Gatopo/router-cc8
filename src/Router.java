@@ -25,7 +25,7 @@ public class Router {
         DistanceVector distanceVector = new DistanceVector(myIp);
         distanceVector.fillRoutingTable(adyacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.tablePrint());
+        //System.out.println(distanceVector.tablePrint());
     }
 
     private static ArrayList readFile (String path) throws Exception{

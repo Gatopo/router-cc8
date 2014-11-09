@@ -35,6 +35,7 @@ public class RoutingClient extends  Thread{
         if ((splitter[0] + ":").equals(FROM_CONSTANT )){
             if (!splitter[1].isEmpty()){
                 String ipReceived  = splitter[1];
+                System.out.println("<CLIENT> DEBUGGING: " + ipReceived);
                 if (adyacentIp.equals(ipReceived)){
                     System.out.println("<CLIENT> DEBUGGING IP RECIVED:" + ipReceived);
                     String type = in.readLine();
