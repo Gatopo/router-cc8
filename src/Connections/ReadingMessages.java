@@ -1,4 +1,4 @@
-package Connections;
+package connections;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
