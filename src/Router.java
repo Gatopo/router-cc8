@@ -22,8 +22,8 @@ public class Router {
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
         sendAdyacents(adyacentNodes);
-        DistanceVector distanceVector = new DistanceVector(myIp);
-        distanceVector.fillRoutingTable(adyacentNodes);
+        //DistanceVector distanceVector = new DistanceVector(myIp);
+        //distanceVector.fillRoutingTable(adyacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
         //System.out.println(distanceVector.tablePrint());
     }
@@ -50,10 +50,11 @@ public class Router {
                 String ip = firstNode[0];
                 rs.setIncomingIP(ip);
                 System.out.println("Server Thread Started, ID: " + i);
-                RoutingClient rc = new RoutingClient(MY_IP, ip);
+                Integer name = i;
+                RoutingClient rc = new RoutingClient(MY_IP, ip, name.toString());
+                System.out.println("Starting a new Client");
                 rc.start();
-                System.out.println("Client Thread Started, ID: " + i);
-
+                //System.out.println("Client Thread Started, ID: " + i);
             }
         }
     }
