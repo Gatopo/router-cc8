@@ -30,32 +30,31 @@ public class DistanceVector extends Thread{
         ArrayList<TableElement> elements = new ArrayList<TableElement>();
         String piecesNodeI[];
         String piecesNodeJ[];
+        String piecesNodeK[];
         String outNode;
         int cost;
         int listSize = comingConnections.size();
         for(int i=0; i<listSize; i++){
             elements.clear();
             outNode = comingConnections.get(i);
-            System.out.println("******************* outing: "+outNode);
             piecesNodeI = comingConnections.get(i).split(":");
             comingConnections.remove(i);
             for(int j=0; j<listSize-1; j++) {
                 piecesNodeJ = comingConnections.get(j).split(":");
-                System.out.println("******************* getting: "+comingConnections.get(j));
-                System.out.println("******************* part: "+piecesNodeI[0]);
-                System.out.println("******************* part: "+piecesNodeJ[0]);
-                if(piecesNodeI[0].equals(piecesNodeJ[0])){
-                    cost = Integer.parseInt(piecesNodeI[1]);
-                }else{
-                    cost = 99;
+                for(int k=0; k<listSize-1; k++){
+                    piecesNodeK = comingConnections.get(k).split(":");
+                    if(piecesNodeJ[0].equals(piecesNodeK[0])){
+                        cost = Integer.parseInt(piecesNodeI[1]);
+                    }else{
+                        cost = 99;
+                    }
+                    tableElement = new TableElement(piecesNodeK[0], piecesNodeJ[0], cost);
+                    elements.add(tableElement);
                 }
-                tableElement = new TableElement(piecesNodeJ[0], piecesNodeI[0], cost);
-                elements.add(tableElement);
             }
             piecesNodeI = outNode.split(":");
             routingTable.put(piecesNodeI[0], elements);
             comingConnections.add(i,outNode);
-            System.out.println("******************* inserting: "+outNode);
         }
     }
 
