@@ -41,6 +41,7 @@ public class DistanceVector extends Thread{
             comingConnections.remove(i);
             for(int j=0; j<listSize-1; j++) {
                 piecesNodeJ = comingConnections.get(j).split(":");
+                System.out.println("getting j: " + piecesNodeJ);
                 for(int k=0; k<listSize-1; k++){
                     piecesNodeK = comingConnections.get(k).split(":");
                     if(piecesNodeJ[0].equals(piecesNodeK[0])){

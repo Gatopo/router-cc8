@@ -68,11 +68,6 @@ public class RoutingClient extends  Thread{
                     System.out.println("<CLIENT> TYPE IS:" + type);
                     if (type.equals(WELCOME_CONSTANT)){
                         System.out.println("<CLIENT>\n Starting to send DV");
-                        while(true){
-                            sleep(TIME_CHECK);
-                            pw.write(KA_CONSTANT + "\n");
-                            //Pero tambien hay que revisar si hay cambios en la tabla.
-                        }
                     }
                 }
             }
@@ -95,6 +90,11 @@ public class RoutingClient extends  Thread{
                 String welcome = IN.readLine();
                 System.out.println("<CLIENT>RECIEVING FROM SERVER: " + welcome);
                 verifyType(welcome, IN, OUT);
+                while(true){
+                    sleep(TIME_CHECK);
+                    OUT.write(KA_CONSTANT + "\n");
+                    //Pero tambien hay que revisar si hay cambios en la tabla.
+                }
             }catch (Exception e) {
                 e.printStackTrace();
             }
