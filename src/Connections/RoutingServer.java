@@ -16,7 +16,7 @@ public class RoutingServer extends Thread {
     private static BufferedReader IN;
     private static PrintWriter OUT_WRITER;
     private static String ADYACENT_IP;
-    private static Socket SOCKET;
+    private Socket SOCKET;
     private static String LOCAL_IP;
     private static String ADYACENT_DNS;
     private static String ADYACENT_DISTANCE;
