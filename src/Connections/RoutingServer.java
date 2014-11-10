@@ -48,7 +48,7 @@ public class RoutingServer extends Thread {
                 validatorForAllNewClient.start();
             }
         }catch (IOException ioe){
-            System.out.println("<ERROR> Cuased by:" + ioe);
+            System.out.println("<ERROR> Caused by:" + ioe);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -25,4 +25,10 @@ public class TableElement {
     public int getRouteCost(){
         return this.cost;
     }
+
+    public String toString() {
+        String tableElementRepresentation = "";
+        tableElementRepresentation += "Adjacent: " + nodeAdjacent + " Destiny: " + nodeDestiny + " Cost: " + cost;
+        return tableElementRepresentation;
+    }
 }

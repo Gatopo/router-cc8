@@ -18,6 +18,7 @@ public class Router {
     private static String TIME_INTERVAL;
     public static void main (String []args) throws Exception{
         Scanner sc = new Scanner(System.in);
+        /*
         System.out.println("Enter your IP: ");
         String myIp = sc.nextLine();
         MY_IP = myIp;
@@ -32,12 +33,12 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);
-        /*ArrayList<String> adjacentNodes = new ArrayList<String>();
+        sendAdyacents(adyacentNodes);*/
+        ArrayList<String> adjacentNodes = new ArrayList<String>();
         adjacentNodes.add("A:2");
         adjacentNodes.add("B:3");
-        adjacentNodes.add("C:1");*/
-        //DistanceVector distanceVector = new DistanceVector(adjacentNodes);
+        adjacentNodes.add("C:1");
+        DistanceVector distanceVector = new DistanceVector(adjacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
         //System.out.println(distanceVector.tablePrint());
     }
@@ -68,7 +69,7 @@ public class Router {
                 String ip = firstNode[1];
                 String distance = firstNode[2];
                 rs.setIncomingIP(ip, dns, distance);
-                System.out.println("Client Thread Started, ID: " + i);
+                //System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
                 rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
                 rc.start();
