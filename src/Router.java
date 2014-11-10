@@ -25,7 +25,11 @@ public class Router {
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
         sendAdyacents(adyacentNodes);
-        DistanceVector distanceVector = new DistanceVector(myIp, adyacentNodes);
+        /*ArrayList<String> adjacentNodes = new ArrayList<String>();
+        adjacentNodes.add("A:2");
+        adjacentNodes.add("B:3");
+        adjacentNodes.add("C:1");*/
+        //DistanceVector distanceVector = new DistanceVector(adjacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
         //System.out.println(distanceVector.tablePrint());
     }
