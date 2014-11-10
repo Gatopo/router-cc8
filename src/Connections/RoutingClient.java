@@ -94,6 +94,8 @@ public class RoutingClient extends  Thread{
                     sleep(TIME_CHECK);
                     OUT.write(FROM_CONSTANT + LOCAL_IP + "\n" + KA_CONSTANT + "\n");
                     OUT.write(KA_CONSTANT + "\n");
+                    System.out.println("<CLIENT> Sending Message: " + FROM_CONSTANT + LOCAL_IP + "\n"
+                                        + KA_CONSTANT + "\n");
                     OUT.flush();
                     //Pero tambien hay que revisar si hay cambios en la tabla.
                 }
