@@ -68,7 +68,7 @@ public class Router {
                 String ip = firstNode[1];
                 String distance = firstNode[2];
                 rs.setIncomingIP(ip, dns, distance);
-                System.out.println("Client Thread Started, ID: " + i);
+                //System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
                 rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
                 rc.start();
