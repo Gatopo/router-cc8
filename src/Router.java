@@ -56,7 +56,9 @@ public class Router {
     }
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
-        RoutingServer rs = new RoutingServer(MY_IP);
+        Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
+        Long longTime = new Long(realTime.toString());
+        RoutingServer rs = new RoutingServer(MY_IP, realTime);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
@@ -68,8 +70,6 @@ public class Router {
                 rs.setIncomingIP(ip, dns, distance);
                 System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
-                Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
-                Long longTime = new Long(realTime.toString());
                 rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
                 rc.start();
             }
