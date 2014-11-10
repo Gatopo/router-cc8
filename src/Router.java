@@ -40,7 +40,8 @@ public class Router {
         adjacentNodes.add("C:1");
         DistanceVector distanceVector = new DistanceVector(adjacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
-        //System.out.println(distanceVector.tablePrint());
+        System.out.println(distanceVector.getRoutingTable().toString());
+        System.out.println(distanceVector.tablePrint());
     }
 
     private static ArrayList readFile (String path) throws Exception{

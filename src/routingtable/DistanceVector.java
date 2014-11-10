@@ -13,6 +13,7 @@ public class DistanceVector extends Thread{
 
     public DistanceVector(ArrayList<String> configFile){
         mapTable = new HashMap<String, ArrayList<TableElement>>();
+        routingTable = new HashMap<String, ArrayList<TableElement>>();
         //tableNode = new HashMap<String, ArrayList<TableElement>>();
         //fields = new ArrayList<TableElement>();
         fillRoutingTable(configFile);
@@ -33,16 +34,15 @@ public class DistanceVector extends Thread{
         String piecesNodeJ[];
         String piecesNodeK[];
         String outNode;
+        String tempKey= "";
         int cost;
         int listSize = comingConnections.size();
         for(int i=0; i<listSize; i++){
-            elements.clear();
+            elements = new ArrayList<TableElement>();
             outNode = comingConnections.get(i);
-            //piecesNodeI = comingConnections.get(i).split(":");
             comingConnections.remove(i);
             for(int j=0; j<listSize-1; j++) {
                 piecesNodeJ = comingConnections.get(j).split(":");
-                //System.out.println("getting j: " + piecesNodeJ[0]);
                 for(int k=0; k<listSize-1; k++){
                     piecesNodeK = comingConnections.get(k).split(":");
                     if(piecesNodeJ[0].equals(piecesNodeK[0])){
@@ -50,18 +50,15 @@ public class DistanceVector extends Thread{
                     }else{
                         cost = 99;
                     }
-                    //System.out.println("getting k: " + piecesNodeK[0]);
                     tableElement = new TableElement(piecesNodeJ[0], piecesNodeK[0], cost);
                     elements.add(tableElement);
-                    System.out.println("element: " + tableElement);
                 }
             }
             piecesNodeI = outNode.split(":");
-            System.out.println(mapTable.put(piecesNodeI[0], elements));
-            System.out.println("table: " + mapTable.toString());
+            mapTable.put(piecesNodeI[0], elements);
             comingConnections.add(i,outNode);
         }
-        Set<Map.Entry<String, ArrayList<TableElement>>> set = mapTable.entrySet();
+        routingTable.putAll(mapTable);
     }
 
     public HashMap<String,ArrayList<TableElement>> getRoutingTable(){
