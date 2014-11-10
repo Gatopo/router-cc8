@@ -13,17 +13,20 @@ public class RoutingClient extends  Thread{
     private static final String  FROM_CONSTANT = "From:";
     private static final String HELLO_CONSTANT = "Type:HELLO";
     private static final String WELCOME_CONSTANT = "Type:WELCOME";
+    private static final String KA_CONSTANT = "Type:KeepAlive";
 
     private Socket socket;
     private static String LOCAL_IP = "";
+    private Long TIME_CHECK;
     private PrintWriter OUT = null;
     private String adyacentIp;
     private Boolean successfulConnection;
     private String threadName;
-    BufferedReader IN;
+    private BufferedReader IN;
 
-    public RoutingClient(String localIp, String adyacentNode, String name){
+    public RoutingClient(String localIp, String adyacentNode, String name, Long time){
         adyacentIp = adyacentNode;
+        TIME_CHECK = time;
         try {
             System.out.println("Starting a new client");
             InetAddress address = InetAddress.getByName(adyacentIp);
@@ -51,7 +54,7 @@ public class RoutingClient extends  Thread{
         }
     }
 
-    public void verifyType(String inMsg, BufferedReader in) throws Exception{
+    public void verifyType(String inMsg, BufferedReader in, PrintWriter pw) throws Exception{
         String welcomeMsg = WELCOME_CONSTANT + "\n";
         String[] splitter = inMsg.split(":");
         if ((splitter[0] + ":").equals(FROM_CONSTANT )){
@@ -65,6 +68,11 @@ public class RoutingClient extends  Thread{
                     System.out.println("<CLIENT> TYPE IS:" + type);
                     if (type.equals(WELCOME_CONSTANT)){
                         System.out.println("<CLIENT>\n Starting to send DV");
+                        while(true){
+                            sleep(TIME_CHECK);
+                            pw.write(KA_CONSTANT + "\n");
+                            //Pero tambien hay que revisar si hay cambios en la tabla.
+                        }
                     }
                 }
             }
@@ -86,7 +94,7 @@ public class RoutingClient extends  Thread{
                 OUT.flush();
                 String welcome = IN.readLine();
                 System.out.println("<CLIENT>RECIEVING FROM SERVER: " + welcome);
-                verifyType(welcome, IN);
+                verifyType(welcome, IN, OUT);
             }catch (Exception e) {
                 e.printStackTrace();
             }

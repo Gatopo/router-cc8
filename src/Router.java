@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 public class Router {
     private static String MY_IP;
+    private static String TIME_INTERVAL;
     public static void main (String []args) throws Exception{
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
@@ -23,6 +24,13 @@ public class Router {
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
         String filePath = sc.nextLine();
+        System.out.println("Set the time Interval, if empty 30's as default: ");
+        String interval = sc.nextLine();
+        if (interval.equals("") || interval.equals(null)){
+            TIME_INTERVAL = "30";
+        }else {
+            TIME_INTERVAL = interval;
+        }
         ArrayList<String> adyacentNodes = readFile(filePath);
         sendAdyacents(adyacentNodes);
         /*ArrayList<String> adjacentNodes = new ArrayList<String>();
@@ -48,17 +56,21 @@ public class Router {
     }
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
-        RoutingServer rs = new RoutingServer(MY_IP);
+        Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
+        Long longTime = new Long(realTime.toString());
+        RoutingServer rs = new RoutingServer(MY_IP, realTime);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
             if (nodes.get(i).contains(":")) {
                 String[] firstNode = nodes.get(i).split(":");
-                String ip = firstNode[0];
-                rs.setIncomingIP(ip);
-                //System.out.println("Server Thread Started, ID: " + i);
+                String dns = firstNode[0];
+                String ip = firstNode[1];
+                String distance = firstNode[2];
+                rs.setIncomingIP(ip, dns, distance);
+                System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
-                rc = new RoutingClient(MY_IP, ip, name.toString());
+                rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
                 rc.start();
             }
         }
