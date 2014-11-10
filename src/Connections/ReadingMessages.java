@@ -13,8 +13,8 @@ public class ReadingMessages extends Thread {
     private static final String HELLO_CONSTANT = "Type:HELLO";
     private static final String WELCOME_CONSTANT = "Type:WELCOME";
     private static final String DV_CONSTANT = "Type:DV";
-    private static BufferedReader IN;
-    private static PrintWriter OUT;
+    private BufferedReader IN;
+    private PrintWriter OUT;
     private static String MY_IP;
 
 
