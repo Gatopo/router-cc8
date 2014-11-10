@@ -19,6 +19,8 @@ public class RoutingServer extends Thread {
     private Socket SOCKET;
     private static String LOCAL_IP;
     private static long timer;
+    private static String ADYACENT_DNS;
+    private static String ADYACENT_DISTANCE;
 
     public RoutingServer(String localIp, long timer) throws Exception{
         System.out.println("Starting the server");
@@ -27,8 +29,10 @@ public class RoutingServer extends Thread {
         this.timer = timer;
     }
 
-    public void setIncomingIP(String ip){
+    public void setIncomingIP(String ip, String dns, String dist){
         ADYACENT_IP = ip;
+        ADYACENT_DNS = dns;
+        ADYACENT_DISTANCE = dist;
     }
 
     public void run(){
