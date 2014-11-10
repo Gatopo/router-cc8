@@ -16,13 +16,15 @@ public class RoutingServer extends Thread {
     private static BufferedReader IN;
     private static PrintWriter OUT_WRITER;
     private static String ADYACENT_IP;
-    private static Socket SOCKET;
+    private Socket SOCKET;
     private static String LOCAL_IP;
+    private static long timer;
 
-    public RoutingServer(String localIp) throws Exception{
+    public RoutingServer(String localIp, long timer) throws Exception{
         System.out.println("Starting the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
+        this.timer = timer;
     }
 
     public void setIncomingIP(String ip){
@@ -30,13 +32,16 @@ public class RoutingServer extends Thread {
     }
 
     public void run(){
-        ReadingMessages serverReder;
+        ReadingMessages serverReader;
+        VerificationTimeUConnection validatorForAllNewClient;
         try {
             while(true) {
                 SOCKET = serverSocket.accept();
                 System.out.println("New connection accepted...");
-                serverReder = new ReadingMessages(SOCKET, LOCAL_IP);
-                serverReder.start();
+                serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
+                validatorForAllNewClient = new VerificationTimeUConnection(serverReader, );
+                serverReader.start();
+                validatorForAllNewClient.start();
             }
         }catch (IOException ioe){
             System.out.println("<ERROR> Cuased by:" + ioe);
