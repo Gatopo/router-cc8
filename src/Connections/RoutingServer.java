@@ -39,7 +39,7 @@ public class RoutingServer extends Thread {
                 SOCKET = serverSocket.accept();
                 System.out.println("New connection accepted...");
                 serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
-                validatorForAllNewClient = new VerificationTimeUConnection(serverReader, );
+                validatorForAllNewClient = new VerificationTimeUConnection(serverReader, timer);
                 serverReader.start();
                 validatorForAllNewClient.start();
             }
