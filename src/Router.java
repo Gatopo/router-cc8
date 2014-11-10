@@ -3,6 +3,7 @@ import connections.RoutingClient;
 import connections.RoutingServer;
 import routingtable.DistanceVector;
 
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
@@ -23,10 +24,10 @@ public class Router {
         System.out.println("Enter Path to the file: ");
         String filePath = sc.nextLine();
         ArrayList<String> adyacentNodes = readFile(filePath);
-        //sendAdyacents(adyacentNodes);
+        sendAdyacents(adyacentNodes);
         DistanceVector distanceVector = new DistanceVector(myIp, adyacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.tablePrint());
+        //System.out.println(distanceVector.tablePrint());
     }
 
     private static ArrayList readFile (String path) throws Exception{
@@ -43,18 +44,18 @@ public class Router {
     }
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
-        RoutingServer rs = new RoutingServer();
+        RoutingServer rs = new RoutingServer(MY_IP);
+        RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
             if (nodes.get(i).contains(":")) {
                 String[] firstNode = nodes.get(i).split(":");
                 String ip = firstNode[0];
                 rs.setIncomingIP(ip);
-                System.out.println("Server Thread Started, ID: " + i);
-                RoutingClient rc = new RoutingClient(MY_IP, ip);
+                //System.out.println("Server Thread Started, ID: " + i);
+                Integer name = i;
+                rc = new RoutingClient(MY_IP, ip, name.toString());
                 rc.start();
-                System.out.println("Client Thread Started, ID: " + i);
-
             }
         }
     }
