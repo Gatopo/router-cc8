@@ -20,6 +20,7 @@ public class RoutingServer extends Thread {
     private static String LOCAL_IP;
 
     public RoutingServer(String localIp) throws Exception{
+        System.out.println("Starting a the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
     }
@@ -29,10 +30,12 @@ public class RoutingServer extends Thread {
     }
 
     public void run(){
+        ReadingMessages serverReder;
         try {
             while(true) {
                 SOCKET = serverSocket.accept();
-                ReadingMessages serverReder = new ReadingMessages(SOCKET, LOCAL_IP);
+                System.out.println("New connection accepted...");
+                serverReder = new ReadingMessages(SOCKET, LOCAL_IP);
                 serverReder.start();
             }
         }catch (IOException ioe){
