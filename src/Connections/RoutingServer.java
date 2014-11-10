@@ -20,7 +20,7 @@ public class RoutingServer extends Thread {
     private static String LOCAL_IP;
 
     public RoutingServer(String localIp) throws Exception{
-        System.out.println("Starting a the server");
+        System.out.println("Starting the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
     }
