@@ -26,6 +26,7 @@ public class RoutingClient extends  Thread{
     public RoutingClient(String localIp, String adyacentNode, String name){
         adyacentIp = adyacentNode;
         try {
+            System.out.println("Starting a new client");
             InetAddress address = InetAddress.getByName(adyacentIp);
             //socket = new Socket(address, ROUTING_CLIENT_PORT);
             socket = new Socket();

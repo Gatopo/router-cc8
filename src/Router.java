@@ -43,18 +43,17 @@ public class Router {
 
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
         RoutingServer rs = new RoutingServer(MY_IP);
+        RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
             if (nodes.get(i).contains(":")) {
                 String[] firstNode = nodes.get(i).split(":");
                 String ip = firstNode[0];
                 rs.setIncomingIP(ip);
-                System.out.println("Server Thread Started, ID: " + i);
+                //System.out.println("Server Thread Started, ID: " + i);
                 Integer name = i;
-                RoutingClient rc = new RoutingClient(MY_IP, ip, name.toString());
-                System.out.println("Starting a new Client");
+                rc = new RoutingClient(MY_IP, ip, name.toString());
                 rc.start();
-                //System.out.println("Client Thread Started, ID: " + i);
             }
         }
     }
