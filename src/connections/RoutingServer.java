@@ -45,9 +45,12 @@ public class RoutingServer extends Thread {
                 SOCKET = serverSocket.accept();
                 System.out.println("New connection accepted...");
                 String ipNewConnection = SOCKET.getInetAddress().getHostAddress();
-                if(stateOfConnections.hasConnection(ipNewConnection)){
-                    RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection, "reconnect1", timer);
-                    client.start();
+                System.out.println(stateOfConnections.hasConnection(ipNewConnection));
+                if(stateOfConnections.hasConnection(ipNewConnection)) {
+                    if (!stateOfConnections.getStateOfConnection(ipNewConnection)) {
+                        RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection, "reconnect1", timer);
+                        client.start();
+                    }
                 }
                 serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
                 validatorForAllNewClient = new VerificationTimeUConnection(serverReader, timer);
