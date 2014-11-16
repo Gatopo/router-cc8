@@ -20,11 +20,13 @@ public class Router {
     public static void main (String []args) throws Exception{
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
-        String myIp = sc.nextLine();
+        //String myIp = sc.nextLine();
+        String myIp = "192.168.1.8";
         MY_IP = myIp;
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
-        String filePath = sc.nextLine();
+        //String filePath = sc.nextLine();
+        String filePath = "C:\\\\confile.txt";
         System.out.println("Set the time Interval, if empty 30's as default: ");
         String interval = sc.nextLine();
         if (interval.equals("") || interval.equals(null)){
