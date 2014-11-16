@@ -26,8 +26,9 @@ public class Router {
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
         //String filePath = sc.nextLine();
-        String filePath = "C:\\\\confile.txt";
-        System.out.println("Set the time Interval, if empty 30's as default: ");
+        String filePath = "/home/mario/Configuration.txt";
+        System.out.println("Set the time" +
+                " Interval, if empty 30's as default: ");
         String interval = sc.nextLine();
         if (interval.equals("") || interval.equals(null)){
             TIME_INTERVAL = "30";

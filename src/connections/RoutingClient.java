@@ -68,6 +68,7 @@ public class RoutingClient extends  Thread{
         }catch(IOException ioe){
             System.err.println("Error while try to create the new connection with the host: " + adyacentIp
                     +"\ngive the following error: " + ioe);
+            this.suspend();
             successfulConnection = false;
         }catch(SecurityException se){
             System.err.println("A security method don´t allow the connection: " + se);
