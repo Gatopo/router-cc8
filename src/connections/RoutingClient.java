@@ -23,13 +23,16 @@ public class RoutingClient extends  Thread{
     private Boolean successfulConnection;
     private String threadName;
     private BufferedReader IN;
+    private static StateOfConnections stateOfConnections;
 
-    public RoutingClient(String localIp, String adyacentNode, String name, Long time){
+    public RoutingClient(String localIp, String adyacentNode, String name, Long time,
+                         StateOfConnections stateOfConnections){
         LOCAL_IP = localIp;
         adyacentIp = adyacentNode;
         threadName = name;
         TIME_CHECK = time;
         socket = new Socket();
+        this.stateOfConnections = stateOfConnections;
     }
 
     public void verifyType(String inMsg, BufferedReader in, PrintWriter pw) throws Exception{
@@ -70,6 +73,7 @@ public class RoutingClient extends  Thread{
                     +"\ngive the following error: " + ioe);
             this.suspend();
             successfulConnection = false;
+            stateOfConnections.addNewConnection(adyacentIp,false, null);
         }catch(SecurityException se){
             System.err.println("A security method don´t allow the connection: " + se);
             successfulConnection = false;
@@ -87,6 +91,7 @@ public class RoutingClient extends  Thread{
         createNewConnection();
         if(successfulConnection) {
             try {
+                stateOfConnections.addNewConnection(adyacentIp,true, null);
                 System.out.println("Client Thread Started, ID: " + threadName);
                 String helloMsg = FROM_CONSTANT + LOCAL_IP + "\n" + HELLO_CONSTANT;
                 OUT.println(helloMsg);
