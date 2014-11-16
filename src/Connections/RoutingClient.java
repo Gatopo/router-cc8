@@ -25,33 +25,11 @@ public class RoutingClient extends  Thread{
     private BufferedReader IN;
 
     public RoutingClient(String localIp, String adyacentNode, String name, Long time){
+        LOCAL_IP = localIp;
         adyacentIp = adyacentNode;
+        threadName = name;
         TIME_CHECK = time;
-        try {
-            System.out.println("Starting a new client");
-            InetAddress address = InetAddress.getByName(adyacentIp);
-            //socket = new Socket(address, ROUTING_CLIENT_PORT);
-            socket = new Socket();
-            socket.connect(new InetSocketAddress(address, ROUTING_CLIENT_PORT), 10000);
-            OUT = new PrintWriter(socket.getOutputStream());
-            IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            LOCAL_IP = localIp;
-            successfulConnection = true;
-            threadName = name;
-        }catch(IOException ioe){
-            System.err.println("Error while try to create the new connection with the host: " + adyacentIp
-                    +"\ngive the following error: " + ioe);
-            successfulConnection = false;
-        }catch(SecurityException se){
-            System.err.println("A security method don´t allow the connection: " + se);
-            successfulConnection = false;
-        }catch(IllegalArgumentException iae){
-            System.err.println("Error, the port inserted don´t exist: " + iae);
-            successfulConnection = false;
-        }catch(NullPointerException npe){
-            System.err.println("Error, the given host is empty: " + npe);
-            successfulConnection = false;
-        }
+        socket = new Socket();
     }
 
     public void verifyType(String inMsg, BufferedReader in, PrintWriter pw) throws Exception{
@@ -78,8 +56,34 @@ public class RoutingClient extends  Thread{
         return successfulConnection;
     }
 
+    public void createNewConnection(){
+        try {
+            System.out.println("Running a client");
+            InetAddress address = InetAddress.getByName(adyacentIp);
+            //socket = new Socket(address, ROUTING_CLIENT_PORT);
+            socket.connect(new InetSocketAddress(address, ROUTING_CLIENT_PORT), 10000);
+            OUT = new PrintWriter(socket.getOutputStream());
+            IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            successfulConnection = true;
+        }catch(IOException ioe){
+            System.err.println("Error while try to create the new connection with the host: " + adyacentIp
+                    +"\ngive the following error: " + ioe);
+            successfulConnection = false;
+        }catch(SecurityException se){
+            System.err.println("A security method don´t allow the connection: " + se);
+            successfulConnection = false;
+        }catch(IllegalArgumentException iae){
+            System.err.println("Error, the port inserted don´t exist: " + iae);
+            successfulConnection = false;
+        }catch(NullPointerException npe){
+            System.err.println("Error, the given host is empty: " + npe);
+            successfulConnection = false;
+        }
+    }
+
     @Override
     public void run(){
+        createNewConnection();
         if(successfulConnection) {
             try {
                 System.out.println("Client Thread Started, ID: " + threadName);

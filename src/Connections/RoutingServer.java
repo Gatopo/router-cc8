@@ -21,12 +21,14 @@ public class RoutingServer extends Thread {
     private static long timer;
     private static String ADYACENT_DNS;
     private static String ADYACENT_DISTANCE;
+    private static StateOfConnections stateOfConnections;
 
-    public RoutingServer(String localIp, long timer) throws Exception{
+    public RoutingServer(String localIp, long timer, StateOfConnections stateOfConnections) throws Exception{
         System.out.println("Starting the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
         this.timer = timer;
+        this.stateOfConnections = stateOfConnections;
     }
 
     public void setIncomingIP(String ip, String dns, String dist){
@@ -42,6 +44,12 @@ public class RoutingServer extends Thread {
             while(true) {
                 SOCKET = serverSocket.accept();
                 System.out.println("New connection accepted...");
+                String ipNewConnection = SOCKET.getInetAddress().getHostAddress();
+                if(stateOfConnections.hasConnection(ipNewConnection)){
+                    RoutingClient client = stateOfConnections.getClient(ipNewConnection);
+                    stateOfConnections.changeStateOfConnection(ipNewConnection, true);
+                    client.start();
+                }
                 serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
                 validatorForAllNewClient = new VerificationTimeUConnection(serverReader, timer);
                 serverReader.start();

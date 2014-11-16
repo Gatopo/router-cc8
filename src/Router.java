@@ -1,6 +1,7 @@
 
 import connections.RoutingClient;
 import connections.RoutingServer;
+import connections.StateOfConnections;
 import routingtable.DistanceVector;
 
 
@@ -60,7 +61,8 @@ public class Router {
     private static void sendAdyacents (ArrayList<String> nodes) throws Exception{
         Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
         Long longTime = new Long(realTime.toString());
-        RoutingServer rs = new RoutingServer(MY_IP, realTime);
+        StateOfConnections stateOfConnections = new StateOfConnections();
+        RoutingServer rs = new RoutingServer(MY_IP, realTime, stateOfConnections);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
@@ -73,6 +75,7 @@ public class Router {
                 //System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
                 rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
+                stateOfConnections.addNewConnection(ip,true, rc);
                 rc.start();
             }
         }
