@@ -25,14 +25,12 @@ public class RoutingClient extends  Thread{
     private BufferedReader IN;
     private static StateOfConnections stateOfConnections;
 
-    public RoutingClient(String localIp, String adyacentNode, String name, Long time,
-                         StateOfConnections stateOfConnections){
+    public RoutingClient(String localIp, String adyacentNode, String name, Long time){
         LOCAL_IP = localIp;
         adyacentIp = adyacentNode;
         threadName = name;
         TIME_CHECK = time;
         socket = new Socket();
-        this.stateOfConnections = stateOfConnections;
     }
 
     public void verifyType(String inMsg, BufferedReader in, PrintWriter pw) throws Exception{
@@ -53,6 +51,10 @@ public class RoutingClient extends  Thread{
                 }
             }
         }
+    }
+
+    public void setStateOfConnectionsList(StateOfConnections stateOfConnections){
+        this.stateOfConnections = stateOfConnections;
     }
 
     public boolean isASuccessfulConnection(){

@@ -76,7 +76,8 @@ public class Router {
                 rs.setIncomingIP(ip, dns, distance);
                 //System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
-                rc = new RoutingClient(MY_IP, ip, name.toString(), longTime, stateOfConnections);
+                rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
+                rc.setStateOfConnectionsList(stateOfConnections);
                 rc.start();
             }
         }
