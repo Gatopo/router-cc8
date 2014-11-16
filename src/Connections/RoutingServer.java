@@ -48,9 +48,9 @@ public class RoutingServer extends Thread {
                 if(stateOfConnections.hasConnection(ipNewConnection)){
                     RoutingClient client = stateOfConnections.getClient(ipNewConnection);
                     stateOfConnections.changeStateOfConnection(ipNewConnection, true);
-                    client.start();
+                    client.resume();
                 }
-                serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
+                serverReader = new ReadingMessages(SOCKET, ipNewConnection);
                 validatorForAllNewClient = new VerificationTimeUConnection(serverReader, timer);
                 serverReader.start();
                 validatorForAllNewClient.start();

@@ -19,13 +19,14 @@ public class Router {
     private static String TIME_INTERVAL;
     public static void main (String []args) throws Exception{
         Scanner sc = new Scanner(System.in);
-        /*
         System.out.println("Enter your IP: ");
-        String myIp = sc.nextLine();
+        //String myIp = sc.nextLine();
+        String myIp = "192.168.1.8";
         MY_IP = myIp;
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
-        String filePath = sc.nextLine();
+        //String filePath = sc.nextLine();
+        String filePath = "C:\\\\confile.txt";
         System.out.println("Set the time Interval, if empty 30's as default: ");
         String interval = sc.nextLine();
         if (interval.equals("") || interval.equals(null)){
@@ -34,15 +35,15 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);*/
-        ArrayList<String> adjacentNodes = new ArrayList<String>();
+        sendAdyacents(adyacentNodes);
+        /*ArrayList<String> adjacentNodes = new ArrayList<String>();
         adjacentNodes.add("A:2");
         adjacentNodes.add("B:3");
         adjacentNodes.add("C:1");
         DistanceVector distanceVector = new DistanceVector(adjacentNodes);
         //System.out.println(distanceVector.getRoutingTable().toString());
         System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.tablePrint());
+        System.out.println(distanceVector.tablePrint());*/
     }
 
     private static ArrayList readFile (String path) throws Exception{
