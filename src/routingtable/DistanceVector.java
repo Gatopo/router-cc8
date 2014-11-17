@@ -1,7 +1,5 @@
 package routingtable;
 
-import javafx.scene.control.Tab;
-
 import java.util.*;
 
 /**

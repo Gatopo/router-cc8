@@ -1,5 +1,7 @@
 package connections;
 
+import routingtable.DistanceVector;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,11 +24,14 @@ public class RoutingServer extends Thread {
     private static String ADYACENT_DNS;
     private static String ADYACENT_DISTANCE;
     private static StateOfConnections stateOfConnections;
+    private static DistanceVector distanceVector;
 
-    public RoutingServer(String localIp, long timerT, long timerU, StateOfConnections stateOfConnections) throws Exception{
+    public RoutingServer(String localIp, long timerT, long timerU, StateOfConnections stateOfConnections,
+                         DistanceVector distanceVector) throws Exception{
         System.out.println("Starting the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
+        this.distanceVector = distanceVector;
         this.TIMER_T = timerT;
         this.TIMER_U = timerU;
         this.stateOfConnections = stateOfConnections;
@@ -49,7 +54,8 @@ public class RoutingServer extends Thread {
                 System.out.println(stateOfConnections.hasConnection(ipNewConnection));
                 if(stateOfConnections.hasConnection(ipNewConnection)) {
                     if (!stateOfConnections.getStateOfConnection(ipNewConnection)) {
-                        RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection, "reconnect1", TIMER_T);
+                        RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection,
+                                "reconnect1", TIMER_T, distanceVector);
                         client.start();
                     }
                 }

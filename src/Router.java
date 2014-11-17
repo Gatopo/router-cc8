@@ -86,6 +86,7 @@ public class Router {
         Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
         Long longTime = new Long(realTime.toString());
         StateOfConnections stateOfConnections = new StateOfConnections();
+        DistanceVector distanceVector = new DistanceVector(nodes, "E");
         RoutingServer rs = new RoutingServer(MY_IP, realTime, 90000, stateOfConnections);
         RoutingClient rc;
         rs.start();
@@ -98,7 +99,7 @@ public class Router {
                 rs.setIncomingIP(ip, dns, distance);
                 //System.out.println("Client Thread Started, ID: " + i);
                 Integer name = i;
-                rc = new RoutingClient(MY_IP, ip, name.toString(), longTime);
+                rc = new RoutingClient(MY_IP, ip, name.toString(), longTime, distanceVector);
                 rc.setStateOfConnectionsList(stateOfConnections);
                 rc.start();
             }
