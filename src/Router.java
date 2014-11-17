@@ -8,6 +8,7 @@ import routingtable.DistanceVector;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -18,7 +19,6 @@ import java.util.Scanner;
 public class Router {
     private static String MY_IP;
     private static String TIME_INTERVAL;
-    static Map<String,String> dnsTable;
 
 
     public static void main (String []args) throws Exception{
@@ -40,12 +40,21 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
-
         sendAdyacents(adyacentNodes);*/
         ArrayList<String> adjacentNodes = new ArrayList<String>();
-        adjacentNodes.add("A:2");
-        adjacentNodes.add("B:3");
-        adjacentNodes.add("C:1");
+        adjacentNodes.add("A:0.0.0.0:2");
+        adjacentNodes.add("B:1.1.1.1:3");
+        adjacentNodes.add("C:2.2.2.2:1");
+        Map<String,String> dnsTable = new HashMap<String, String>();
+        String[] piecesAdjacentNodes;
+        String DNS = "";
+        String IPDirection = "";
+        for(int i=0; i<adjacentNodes.size(); i++){
+            piecesAdjacentNodes = adjacentNodes.get(i).split(":");
+            DNS = piecesAdjacentNodes[0];
+            IPDirection = piecesAdjacentNodes[1];
+            dnsTable.put(IPDirection, DNS);
+        }
         DistanceVector distanceVector = new DistanceVector(adjacentNodes, "E");
         //System.out.println(distanceVector.getRoutingTable().toString());
         //System.out.println(distanceVector.getRoutingTable().toString());
@@ -54,8 +63,10 @@ public class Router {
         distanceVector.addNewNode("A", "D:2");
         System.out.println("\n" + distanceVector.tablePrint());
         distanceVector.addNewNode("A", "D:1");
+        distanceVector.addNewNode("A", "E:1");
         System.out.println("\n" + distanceVector.tablePrint());
         System.out.println("\n" + distanceVector.getDV(distanceVector.getLessDV()));
+        System.out.println("\n" + dnsTable);
     }
 
     private static ArrayList readFile (String path) throws Exception{

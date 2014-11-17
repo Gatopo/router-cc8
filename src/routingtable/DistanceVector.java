@@ -85,7 +85,7 @@ public class DistanceVector extends Thread{
                 pieceDestiny = comingConnections.get(j).split(":");
                 destiny = pieceDestiny[0];
                 if(destiny.equals(adjacent)){
-                    cost = Integer.parseInt(pieceAdjacent[1]);
+                    cost = Integer.parseInt(pieceAdjacent[2]);
                 }else{
                     cost = 99;
                 }
@@ -192,6 +192,22 @@ public class DistanceVector extends Thread{
             }
         }
         return cost;
+    }
+
+    public String getHostWithLessCost(String destinyHost){
+        ArrayList<TableElement> lessDV = getLessDV();
+        TableElement tableElement;
+        for(int i=0; i<lessDV.size(); i++){
+            tableElement = lessDV.get(i);
+            if(tableElement.getNodeDestiny().equals(destinyHost)){
+                return tableElement.getNodeAdjacent();
+            }
+        }
+        return "";
+    }
+
+    public String getLocalHostName(){
+        return this.getLocalHostName();
     }
 
     public String tablePrint(){
