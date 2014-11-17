@@ -8,6 +8,7 @@ import routingtable.DistanceVector;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -17,6 +18,9 @@ import java.util.Scanner;
 public class Router {
     private static String MY_IP;
     private static String TIME_INTERVAL;
+    static Map<String,String> dnsTable;
+
+
     public static void main (String []args) throws Exception{
         /*Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
@@ -36,6 +40,7 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
+
         sendAdyacents(adyacentNodes);*/
         ArrayList<String> adjacentNodes = new ArrayList<String>();
         adjacentNodes.add("A:2");
