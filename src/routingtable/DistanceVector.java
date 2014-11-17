@@ -1,5 +1,7 @@
 package routingtable;
 
+import javafx.scene.control.Tab;
+
 import java.util.*;
 
 /**
@@ -7,116 +9,216 @@ import java.util.*;
  */
 public class DistanceVector extends Thread{
 
-    private Map<String, ArrayList<TableElement>> mapTable;
     private HashMap<String, ArrayList<TableElement>> routingTable;
     private ArrayList<TableElement> elements;
+    private String localHostName;
+    private boolean existsAnyChange;
+    private ArrayList<String> destinyNodes;
 
-    public DistanceVector(ArrayList<String> configFile){
-        mapTable = new HashMap<String, ArrayList<TableElement>>();
+    public DistanceVector(ArrayList<String> configFile, String localHostName){
         routingTable = new HashMap<String, ArrayList<TableElement>>();
-        //tableNode = new HashMap<String, ArrayList<TableElement>>();
-        //fields = new ArrayList<TableElement>();
+        destinyNodes = new ArrayList<String>();
+        this.localHostName = localHostName;
         fillRoutingTable(configFile);
+        this.existsAnyChange = true;
     }
 
-    public void addNewNode( ){
-
+    public void addNewNode(String fromNode, String dv){
+        String[] piecesDV = dv.split(":");
+        if(!containsElement(fromNode, piecesDV[0])){
+            if(!containsDestiny(piecesDV[0])){
+                destinyNodes.add(piecesDV[0]);
+            }
+            ArrayList<TableElement> elements = routingTable.get(localHostName);
+            int cost = Integer.parseInt(piecesDV[1]);
+            cost += getCostDV(fromNode);
+            TableElement tableElement = new TableElement(fromNode, piecesDV[0], cost);
+            elements.add(tableElement);
+            //order();
+            routingTable.put(localHostName, elements);
+        }else{
+            List<TableElement> elements = routingTable.get(localHostName);
+            TableElement element;
+            int sizeCompare = elements.size();
+            for(int i=0; i<sizeCompare; i++){
+                element = elements.get(i);
+                if(element.getNodeAdjacent().equals(fromNode)){
+                    if(element.getNodeDestiny().equals(piecesDV[0])){
+                        int cost = Integer.parseInt(piecesDV[1]);
+                        cost += getCostDV(fromNode);
+                        element.setNewRouteCost(cost);
+                    }
+                }
+            }
+        }
+        existsAnyChange = true;
     }
 
-    public void addANewRoute(String newIP, ArrayList<String> configurationFile){
-
+    public boolean containsElement(String node, String destiny){
+        List<TableElement> elements = routingTable.get(localHostName);
+        TableElement element;
+        String tempDestiny;
+        for(int i=0; i<elements.size(); i++){
+            element = elements.get(i);
+            tempDestiny = element.getNodeDestiny();
+            if(destiny.equals(tempDestiny) && node.equals(element.getNodeAdjacent())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void fillRoutingTable(ArrayList<String> comingConnections){
-        TableElement tableElement;
         ArrayList<TableElement> elements = new ArrayList<TableElement>();
-        String piecesNodeI[];
-        String piecesNodeJ[];
-        String piecesNodeK[];
-        String outNode;
-        String tempKey= "";
-        int cost;
-        int listSize = comingConnections.size();
-        for(int i=0; i<listSize; i++){
-            elements = new ArrayList<TableElement>();
-            outNode = comingConnections.get(i);
-            comingConnections.remove(i);
-            for(int j=0; j<listSize-1; j++) {
-                piecesNodeJ = comingConnections.get(j).split(":");
-                for(int k=0; k<listSize-1; k++){
-                    piecesNodeK = comingConnections.get(k).split(":");
-                    if(piecesNodeJ[0].equals(piecesNodeK[0])){
-                        cost = Integer.parseInt(piecesNodeJ[1]);
-                    }else{
-                        cost = 99;
-                    }
-                    tableElement = new TableElement(piecesNodeJ[0], piecesNodeK[0], cost);
-                    elements.add(tableElement);
+        TableElement tableElement;
+        int tableSize = comingConnections.size();
+        String[] pieceAdjacent;
+        String[] pieceDestiny;
+        String adjacent;
+        String destiny;
+        int cost = 0;
+        for(int i=0; i<tableSize; i++){
+            pieceAdjacent = comingConnections.get(i).split(":");
+            adjacent = pieceAdjacent[0];
+            destinyNodes.add(adjacent);
+            for(int j=0; j<tableSize; j++){
+                pieceDestiny = comingConnections.get(j).split(":");
+                destiny = pieceDestiny[0];
+                if(destiny.equals(adjacent)){
+                    cost = Integer.parseInt(pieceAdjacent[2]);
+                }else{
+                    cost = 99;
+                }
+                tableElement = new TableElement(adjacent, destiny, cost);
+                elements.add(tableElement);
+            }
+        }
+        routingTable.put(localHostName, elements);
+    }
+
+    public void order(){
+        List<TableElement> elements = routingTable.get(localHostName);
+        TableElement element;
+        TableElement compareElement;
+        TableElement auxTableElement;
+        int sizeCompare = elements.size()-1;
+        for(int i=0; i<sizeCompare; i++){
+            element = elements.get(i);
+            for(int j=i+1; j<sizeCompare; j++) {
+                compareElement = elements.get(j);
+                if(element.isBiggerThan(compareElement)){
+                    System.out.println("is bigger");
+                    auxTableElement = compareElement;
+                    compareElement = element;
+                    element = auxTableElement;
+                    elements.remove(i);
+                    elements.remove(j);
+                    elements.add(i, element);
+                    elements.add(j,auxTableElement);
                 }
             }
-            piecesNodeI = outNode.split(":");
-            mapTable.put(piecesNodeI[0], elements);
-            comingConnections.add(i,outNode);
         }
-        routingTable.putAll(mapTable);
     }
+
+    public ArrayList<String> getDV(ArrayList<TableElement> lessDV){
+        ArrayList<String> dv = new ArrayList<String>();
+        TableElement element;
+        int sizeCompare = lessDV.size();
+        for(int i=0; i<sizeCompare; i++){
+            dv.add(lessDV.get(i).stringDV());
+        }
+        return dv;
+    }
+
+    public ArrayList<TableElement> getLessDV(){
+        ArrayList<TableElement> lessDistanceVectors = new ArrayList<TableElement>();
+        List<TableElement> elements = routingTable.get(localHostName);
+        TableElement element;
+        TableElement lessTableElement;
+        String destinyNode;
+        for(int i=0; i<destinyNodes.size(); i++){
+            destinyNode = destinyNodes.get(i);
+            lessTableElement = new TableElement("",destinyNode,99);
+            for(int j=0; j<elements.size(); j++){
+                element = elements.get(j);
+                if(element.getNodeDestiny().equals(destinyNode)){
+                    if(element.isCostLessThan(lessTableElement)) {
+                        lessTableElement = element;
+                    }
+                }
+            }
+            lessDistanceVectors.add(lessTableElement);
+        }
+        return lessDistanceVectors;
+    }
+
+    public boolean containsDestiny(String destiny){
+        List<TableElement> elements = routingTable.get(localHostName);
+        TableElement element;
+        for(int i=0; i<elements.size(); i++){
+            element = elements.get(i);
+            if(element.getNodeDestiny().equals(destiny)){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public HashMap<String,ArrayList<TableElement>> getRoutingTable(){
         return routingTable;
     }
 
+    public boolean existAnyChange(){
+        return this.existsAnyChange;
+    }
+
+    public void resetFlagExistsAnyChange(){
+        this.existsAnyChange = false;
+    }
+
+    public int getCostDV(String node){
+        List<TableElement> elements = routingTable.get(localHostName);
+        TableElement element;
+        int sizeCompare = elements.size();
+        int cost = 99;
+        for(int i=0; i<sizeCompare; i++){
+            element = elements.get(i);
+            if(element.getNodeAdjacent().equals(node)){
+                if(element.getNodeDestiny().equals(node)){
+                    cost = element.getRouteCost();
+                    return cost;
+                }
+            }
+        }
+        return cost;
+    }
+
+    public String getHostWithLessCost(String destinyHost){
+        ArrayList<TableElement> lessDV = getLessDV();
+        TableElement tableElement;
+        for(int i=0; i<lessDV.size(); i++){
+            tableElement = lessDV.get(i);
+            if(tableElement.getNodeDestiny().equals(destinyHost)){
+                return tableElement.getNodeAdjacent();
+            }
+        }
+        return "";
+    }
+
+    public String getLocalHostName(){
+        return this.getLocalHostName();
+    }
+
     public String tablePrint(){
         String tablePrint = "Routing Table\n" +
                 "-------------------------------------";
-        Set<String> keysTable = routingTable.keySet();
-        Iterator<String> iteratorKeys = keysTable.iterator();
-        ArrayList<TableElement> elements;
-        TableElement element;
-        String tempKeyTable = "";
         String nodePrint = "";
-        while(iteratorKeys.hasNext()) {
-            tempKeyTable = iteratorKeys.next();
-            nodePrint += "\n" + tempKeyTable + "\n";
-            elements = routingTable.get(tempKeyTable);
-            for(int i=0; i<elements.size(); i++){
-                element = elements.get(i);
-                nodePrint += "Adjacent: " + element.getNodeAdjacent()
-                            + " Destiny: " + element.getNodeDestiny()
-                            + " Cost:" + element.getRouteCost()
-                            + "\n";
-            }
+        List<TableElement> connections = routingTable.get(localHostName);
+        for(int i=0; i<connections.size(); i++){
+            nodePrint += "\n" + connections.get(i);
         }
         tablePrint += nodePrint;
-        /*
-        Set<String> keysTable = routingTable.keySet();
-        Set<String> keysNode;
-        Iterator<String> iteratorKeys = keysTable.iterator();
-        Iterator<String> iteratorNode;
-        ArrayList<TableElement> element;
-        TableElement tableElement;
-        String tablePrint = "Routing Table\n" +
-                            "-------------------------------------";
-        String tempKeyTable = "";
-        String tempKeyNode = "";
-        HashMap<String, ArrayList<TableElement>> tableNode;
-        while(iteratorKeys.hasNext()){
-            tempKeyTable = iteratorKeys.next();
-            tableNode = (HashMap<String, ArrayList<TableElement>>)routingTable.get(tempKeyTable);
-            keysNode = tableNode.keySet();
-            iteratorNode = keysNode.iterator();
-            int cont = 0;
-            String nodePrint = "Node: " + tempKeyTable + "\n";
-            while(iteratorNode.hasNext()){
-                tempKeyNode = iteratorNode.next();
-                element = tableNode.get(tempKeyNode);
-                for(int i=0; i<element.size(); i++) {
-                    tableElement = element.get(i);
-                    nodePrint += "From: " + tableElement.getIpAdyacent() + " to " + tempKeyNode + " cost:" + tableElement.getRouteCost() + "\n";
-                }
-            }
-            tablePrint += "\n" + nodePrint + "\n";
-        }
-        */
         return tablePrint;
     }
 }

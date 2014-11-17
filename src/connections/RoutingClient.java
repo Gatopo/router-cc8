@@ -17,7 +17,7 @@ public class RoutingClient extends  Thread{
 
     private Socket socket;
     private static String LOCAL_IP = "";
-    private Long TIME_CHECK;
+    private Long TIME_CHECK_T;
     private PrintWriter OUT = null;
     private String adyacentIp;
     private Boolean successfulConnection;
@@ -29,7 +29,7 @@ public class RoutingClient extends  Thread{
         LOCAL_IP = localIp;
         adyacentIp = adyacentNode;
         threadName = name;
-        TIME_CHECK = time;
+        TIME_CHECK_T = time;
         socket = new Socket();
     }
 
@@ -73,6 +73,7 @@ public class RoutingClient extends  Thread{
         }catch(IOException ioe){
             System.err.println("Error while try to create the new connection with the host: " + adyacentIp
                     +"\ngive the following error: " + ioe);
+            this.suspend();
             successfulConnection = false;
             stateOfConnections.addNewConnection(adyacentIp,false, null);
         }catch(SecurityException se){
@@ -102,7 +103,7 @@ public class RoutingClient extends  Thread{
                 System.out.println("<CLIENT>RECIEVING FROM SERVER: " + welcome);
                 verifyType(welcome, IN, OUT);
                 while(true){
-                    sleep(TIME_CHECK);
+                    sleep(TIME_CHECK_T);
                     OUT.write(FROM_CONSTANT + LOCAL_IP + "\n" + KA_CONSTANT + "\n");
                     OUT.write(KA_CONSTANT + "\n");
                     System.out.println("<CLIENT> Sending Message: " + FROM_CONSTANT + LOCAL_IP + "\n"

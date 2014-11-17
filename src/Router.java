@@ -8,6 +8,8 @@ import routingtable.DistanceVector;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 /**
@@ -17,8 +19,10 @@ import java.util.Scanner;
 public class Router {
     private static String MY_IP;
     private static String TIME_INTERVAL;
+
+
     public static void main (String []args) throws Exception{
-        Scanner sc = new Scanner(System.in);
+        /*Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
         //String myIp = sc.nextLine();
         String myIp = "192.168.10.102";
@@ -26,8 +30,9 @@ public class Router {
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
         //String filePath = sc.nextLine();
-        String filePath = "C:\\\\confile.txt";
-        System.out.println("Set the time Interval, if empty 30's as default: ");
+        String filePath = "/home/mario/Configuration.txt";
+        System.out.println("Set the time" +
+                " Interval, if empty 30's as default: ");
         String interval = sc.nextLine();
         if (interval.equals("") || interval.equals(null)){
             TIME_INTERVAL = "30";
@@ -35,15 +40,33 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);
-        /*ArrayList<String> adjacentNodes = new ArrayList<String>();
-        adjacentNodes.add("A:2");
-        adjacentNodes.add("B:3");
-        adjacentNodes.add("C:1");
-        DistanceVector distanceVector = new DistanceVector(adjacentNodes);
+        sendAdyacents(adyacentNodes);*/
+        ArrayList<String> adjacentNodes = new ArrayList<String>();
+        adjacentNodes.add("A:0.0.0.0:2");
+        adjacentNodes.add("B:1.1.1.1:3");
+        adjacentNodes.add("C:2.2.2.2:1");
+        Map<String,String> dnsTable = new HashMap<String, String>();
+        String[] piecesAdjacentNodes;
+        String DNS = "";
+        String IPDirection = "";
+        for(int i=0; i<adjacentNodes.size(); i++){
+            piecesAdjacentNodes = adjacentNodes.get(i).split(":");
+            DNS = piecesAdjacentNodes[0];
+            IPDirection = piecesAdjacentNodes[1];
+            dnsTable.put(IPDirection, DNS);
+        }
+        DistanceVector distanceVector = new DistanceVector(adjacentNodes, "E");
         //System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.tablePrint());*/
+        //System.out.println(distanceVector.getRoutingTable().toString());
+        //System.out.println(distanceVector.tablePrint());
+        distanceVector.addNewNode("C", "D:1");
+        distanceVector.addNewNode("A", "D:2");
+        System.out.println("\n" + distanceVector.tablePrint());
+        distanceVector.addNewNode("A", "D:1");
+        distanceVector.addNewNode("A", "E:1");
+        System.out.println("\n" + distanceVector.tablePrint());
+        System.out.println("\n" + distanceVector.getDV(distanceVector.getLessDV()));
+        System.out.println("\n" + dnsTable);
     }
 
     private static ArrayList readFile (String path) throws Exception{
@@ -63,7 +86,7 @@ public class Router {
         Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
         Long longTime = new Long(realTime.toString());
         StateOfConnections stateOfConnections = new StateOfConnections();
-        RoutingServer rs = new RoutingServer(MY_IP, realTime, stateOfConnections);
+        RoutingServer rs = new RoutingServer(MY_IP, realTime, 90000, stateOfConnections);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){

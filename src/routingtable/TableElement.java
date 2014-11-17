@@ -26,9 +26,27 @@ public class TableElement {
         return this.cost;
     }
 
+    public void setNewRouteCost(int newCost){
+        this.cost = newCost;
+    }
+
+    public boolean isBiggerThan(TableElement otherNode){
+        char first = this.getNodeAdjacent().charAt(0);
+        char second = otherNode.getNodeAdjacent().charAt(0);
+        return first > second;
+    }
+
+    public boolean isCostLessThan(TableElement otherNode){
+        return this.getRouteCost() < otherNode.getRouteCost();
+    }
+
     public String toString() {
         String tableElementRepresentation = "";
         tableElementRepresentation += "Adjacent: " + nodeAdjacent + " Destiny: " + nodeDestiny + " Cost: " + cost;
         return tableElementRepresentation;
+    }
+
+    public String stringDV(){
+        return nodeDestiny + ":" + Integer.toString(cost);
     }
 }
