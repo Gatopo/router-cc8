@@ -169,6 +169,10 @@ public class DistanceVector extends Thread{
         return routingTable;
     }
 
+    public boolean existAnyChange(){
+        return this.existsAnyChange;
+    }
+
     public void resetFlagExistsAnyChange(){
         this.existsAnyChange = false;
     }
