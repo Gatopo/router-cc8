@@ -26,7 +26,9 @@ public class DistanceVector extends Thread{
     public void addNewNode(String fromNode, String dv){
         String[] piecesDV = dv.split(":");
         if(!containsElement(fromNode, piecesDV[0])){
-            containsDestiny(piecesDV[0]);
+            if(!containsDestiny(piecesDV[0])){
+                destinyNodes.add(piecesDV[0]);
+            }
             ArrayList<TableElement> elements = routingTable.get(localHostName);
             int cost = Integer.parseInt(piecesDV[1]);
             cost += getCostDV(fromNode);
@@ -150,16 +152,16 @@ public class DistanceVector extends Thread{
         return lessDistanceVectors;
     }
 
-    public void containsDestiny(String destiny){
+    public boolean containsDestiny(String destiny){
         List<TableElement> elements = routingTable.get(localHostName);
         TableElement element;
         for(int i=0; i<elements.size(); i++){
             element = elements.get(i);
             if(element.getNodeDestiny().equals(destiny)){
-                return;
+                return true;
             }
         }
-        destinyNodes.add(destiny);
+        return false;
     }
 
 
