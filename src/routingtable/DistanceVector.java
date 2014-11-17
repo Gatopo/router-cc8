@@ -160,7 +160,6 @@ public class DistanceVector extends Thread{
             }
         }
         destinyNodes.add(destiny);
-        System.out.println(destinyNodes);
     }
 
 
