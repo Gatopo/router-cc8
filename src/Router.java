@@ -21,7 +21,7 @@ public class Router {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
         //String myIp = sc.nextLine();
-        String myIp = "192.168.1.4";
+        String myIp = "192.168.10.102";
         MY_IP = myIp;
         System.out.println("MyIP: " + MY_IP);
         System.out.println("Enter Path to the file: ");
