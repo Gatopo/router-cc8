@@ -1,9 +1,12 @@
 package connections;
 
+import routingtable.DistanceVector;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by Mario on 02/11/2014.
@@ -14,6 +17,7 @@ public class RoutingClient extends  Thread{
     private static final String HELLO_CONSTANT = "Type:HELLO";
     private static final String WELCOME_CONSTANT = "Type:WELCOME";
     private static final String KA_CONSTANT = "Type:KeepAlive";
+    private static final String LEN_CONSTANT = "Len:";
 
     private Socket socket;
     private static String LOCAL_IP = "";
@@ -24,8 +28,10 @@ public class RoutingClient extends  Thread{
     private String threadName;
     private BufferedReader IN;
     private static StateOfConnections stateOfConnections;
+    private static DistanceVector distanceVector;
 
-    public RoutingClient(String localIp, String adyacentNode, String name, Long time){
+    public RoutingClient(String localIp, String adyacentNode, String name, Long time, DistanceVector distanceVector){
+        this.distanceVector = distanceVector;
         LOCAL_IP = localIp;
         adyacentIp = adyacentNode;
         threadName = name;
@@ -46,7 +52,21 @@ public class RoutingClient extends  Thread{
                     //Revisar si es WELCOME
                     System.out.println("<CLIENT> TYPE IS:" + type);
                     if (type.equals(WELCOME_CONSTANT)){
-                        System.out.println("<CLIENT>\n Starting to send DV");
+                        if (distanceVector.existAnyChange()){
+                            System.out.println("<CLIENT>\n Starting to send DV");
+                            pw.println(FROM_CONSTANT + LOCAL_IP);
+                            pw.flush();
+                            ArrayList<String> listOfNodes = distanceVector.getDV(distanceVector.getLessDV());
+                            pw.println(LEN_CONSTANT + listOfNodes.size());
+                            pw.flush();
+                            for (int i =0; i<= listOfNodes.size(); i++) {
+                                String nodeDv = listOfNodes.get(i);
+                                pw.println(nodeDv);
+                                System.out.println("<CLIENT> SENDING DV LIST AFTER FROM AND LEN: " + nodeDv);
+                                pw.flush();
+                            }
+                            distanceVector.resetFlagExistsAnyChange();
+                        }
                     }
                 }
             }
