@@ -64,7 +64,7 @@ public class Router {
         Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
         Long longTime = new Long(realTime.toString());
         StateOfConnections stateOfConnections = new StateOfConnections();
-        RoutingServer rs = new RoutingServer(MY_IP, realTime, stateOfConnections);
+        RoutingServer rs = new RoutingServer(MY_IP, realTime, 90000, stateOfConnections);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
