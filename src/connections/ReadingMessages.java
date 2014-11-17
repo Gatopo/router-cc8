@@ -1,5 +1,7 @@
 package connections;
 
+import routingtable.DistanceVector;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,14 +23,16 @@ public class ReadingMessages extends Thread {
     private static String MY_IP;
     private String adjacentHostIP;
     private boolean newMessage;
+    private DistanceVector distanceVector;
 
 
-    public ReadingMessages(Socket socket, String localIp, String adjacentIP) throws Exception{
+    public ReadingMessages(Socket socket, String localIp, String adjacentIP, DistanceVector distanceVector) throws Exception{
         IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         OUT = new PrintWriter(socket.getOutputStream());
         MY_IP =localIp;
         newMessage = false;
         this.adjacentHostIP = adjacentIP;
+        this.distanceVector = distanceVector;
     }
 
     public void getDV(BufferedReader dvBr, int sizeOfList, String source) throws IOException {
@@ -58,7 +62,7 @@ public class ReadingMessages extends Thread {
                         //Comparo si es Tipo HELLO
                         if (secondPart.equals(HELLO_CONSTANT)){
                             System.out.println("<SERVER> MESSAGE RECEIVED: " + helloMsg + HELLO_CONSTANT);
-                            String from = FROM_CONSTANT + MY_IP + "\n";
+                            String from = FROM_CONSTANT + distanceVector.getLocalHostName() + "\n";
                             String weclomeMsg = WELCOME_CONSTANT + "\n";
                             OUT.write(from + weclomeMsg);
                             System.out.println("<SERVER>MESSAGE SENT: " + from + weclomeMsg);

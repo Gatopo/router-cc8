@@ -205,7 +205,7 @@ public class DistanceVector extends Thread{
     }
 
     public String getLocalHostName(){
-        return this.getLocalHostName();
+        return this.localHostName;
     }
 
     public String tablePrint(){

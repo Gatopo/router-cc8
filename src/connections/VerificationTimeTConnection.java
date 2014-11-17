@@ -31,6 +31,7 @@ public class VerificationTimeTConnection extends Thread {
                     sleep(TIMER_U);
                     if(serverClientConnection.existsNewMessage()){
                         serverClientConnection.resetNewMessageFlag();
+                        continue;
                     }
                     System.out.println("U time expired");
                     stateOfConnections.changeStateOfConnection(serverClientConnection.getAdjacentIP(), false);
