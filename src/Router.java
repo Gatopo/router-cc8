@@ -18,7 +18,7 @@ public class Router {
     private static String MY_IP;
     private static String TIME_INTERVAL;
     public static void main (String []args) throws Exception{
-        Scanner sc = new Scanner(System.in);
+        /*Scanner sc = new Scanner(System.in);
         System.out.println("Enter your IP: ");
         //String myIp = sc.nextLine();
         String myIp = "192.168.1.4";
@@ -35,15 +35,21 @@ public class Router {
             TIME_INTERVAL = interval;
         }
         ArrayList<String> adyacentNodes = readFile(filePath);
-        sendAdyacents(adyacentNodes);
-        /*ArrayList<String> adjacentNodes = new ArrayList<String>();
+        sendAdyacents(adyacentNodes);*/
+        ArrayList<String> adjacentNodes = new ArrayList<String>();
         adjacentNodes.add("A:2");
         adjacentNodes.add("B:3");
         adjacentNodes.add("C:1");
-        DistanceVector distanceVector = new DistanceVector(adjacentNodes);
+        DistanceVector distanceVector = new DistanceVector(adjacentNodes, "E");
         //System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.getRoutingTable().toString());
-        System.out.println(distanceVector.tablePrint());*/
+        //System.out.println(distanceVector.getRoutingTable().toString());
+        //System.out.println(distanceVector.tablePrint());
+        distanceVector.addNewNode("C", "D:1");
+        distanceVector.addNewNode("A", "D:2");
+        System.out.println("\n" + distanceVector.tablePrint());
+        distanceVector.addNewNode("A", "D:1");
+        System.out.println("\n" + distanceVector.tablePrint());
+        System.out.println("\n" + distanceVector.getDV(distanceVector.getLessDV()));
     }
 
     private static ArrayList readFile (String path) throws Exception{
@@ -63,7 +69,7 @@ public class Router {
         Integer realTime = Integer.parseInt(TIME_INTERVAL) * 1000;
         Long longTime = new Long(realTime.toString());
         StateOfConnections stateOfConnections = new StateOfConnections();
-        RoutingServer rs = new RoutingServer(MY_IP, realTime, stateOfConnections);
+        RoutingServer rs = new RoutingServer(MY_IP, realTime, 90000, stateOfConnections);
         RoutingClient rc;
         rs.start();
         for (int i = 0; i < nodes.size(); i++){
