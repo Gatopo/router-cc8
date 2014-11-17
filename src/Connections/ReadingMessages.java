@@ -13,17 +13,20 @@ public class ReadingMessages extends Thread {
     private static final String HELLO_CONSTANT = "Type:HELLO";
     private static final String WELCOME_CONSTANT = "Type:WELCOME";
     private static final String DV_CONSTANT = "Type:DV";
+
     private BufferedReader IN;
     private PrintWriter OUT;
     private static String MY_IP;
+    private String adjacentHostIP;
     private boolean newMessage;
 
 
-    public ReadingMessages(Socket socket, String localIp) throws Exception{
+    public ReadingMessages(Socket socket, String localIp, String adjacentIP) throws Exception{
         IN = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         OUT = new PrintWriter(socket.getOutputStream());
         MY_IP =localIp;
         newMessage = false;
+        this.adjacentHostIP = adjacentIP;
     }
 
     public void compareMsg(String msg, BufferedReader br) throws  Exception{
@@ -65,6 +68,8 @@ public class ReadingMessages extends Thread {
     public void resetNewMessageFlag(){
         this.newMessage = false;
     }
+
+    public String getAdjacentIP(){ return this.adjacentHostIP;}
 
     public void run(){
         try {

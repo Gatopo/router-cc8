@@ -2,7 +2,6 @@ package connections;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -18,16 +17,18 @@ public class RoutingServer extends Thread {
     private static String ADYACENT_IP;
     private Socket SOCKET;
     private static String LOCAL_IP;
-    private static long timer;
+    private static long TIMER_T;
+    private static long TIMER_U;
     private static String ADYACENT_DNS;
     private static String ADYACENT_DISTANCE;
     private static StateOfConnections stateOfConnections;
 
-    public RoutingServer(String localIp, long timer, StateOfConnections stateOfConnections) throws Exception{
+    public RoutingServer(String localIp, long timerT, long timerU, StateOfConnections stateOfConnections) throws Exception{
         System.out.println("Starting the server");
         serverSocket = new ServerSocket(ROUTING_SERVER_PORT);
         LOCAL_IP = localIp;
-        this.timer = timer;
+        this.TIMER_T = timerT;
+        this.TIMER_U = timerU;
         this.stateOfConnections = stateOfConnections;
     }
 
@@ -39,7 +40,7 @@ public class RoutingServer extends Thread {
 
     public void run(){
         ReadingMessages serverReader;
-        VerificationTimeUConnection validatorForAllNewClient;
+        VerificationTimeTConnection validatorForAllNewClient;
         try {
             while(true) {
                 SOCKET = serverSocket.accept();
@@ -48,12 +49,12 @@ public class RoutingServer extends Thread {
                 System.out.println(stateOfConnections.hasConnection(ipNewConnection));
                 if(stateOfConnections.hasConnection(ipNewConnection)) {
                     if (!stateOfConnections.getStateOfConnection(ipNewConnection)) {
-                        RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection, "reconnect1", timer);
+                        RoutingClient client = new RoutingClient(LOCAL_IP, ipNewConnection, "reconnect1", TIMER_T);
                         client.start();
                     }
                 }
-                serverReader = new ReadingMessages(SOCKET, LOCAL_IP);
-                validatorForAllNewClient = new VerificationTimeUConnection(serverReader, timer);
+                serverReader = new ReadingMessages(SOCKET, LOCAL_IP, ipNewConnection);
+                validatorForAllNewClient = new VerificationTimeTConnection(serverReader, TIMER_T, TIMER_U, stateOfConnections);
                 serverReader.start();
                 validatorForAllNewClient.start();
             }
